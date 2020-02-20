@@ -1,0 +1,22 @@
+{
+  "name": "marketplace",
+  "version": "1.0.0",
+  "description": "Marketplace Microservice",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node main"
+  },
+  "author": "RPJCODING",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/proto-loader": "^0.5.3",
+    "axios": "^0.19.2",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "grpc": "^1.24.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.2",
+    "nodejs-base64": "^1.0.3"
+  }
+}
