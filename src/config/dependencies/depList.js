@@ -1,6 +1,6 @@
 module.exports = {
     Tools: new (require("./builders/Tools/Tools"))(),
-    DAO: new (require("./builders/DAO/DAO"))(),
+    DAO: new (require("./builders/DAO/DAObuilder"))(),
     Factories: new(require("./builders/Factory/Factories"))(),
     SCI: new (require("./builders/SCI/SCI"))()
 }

@@ -1,3 +1,3 @@
 module.exports = {
-    Marketplace: require("./Marketplace/Marketplace")
+    Post: require("./Post/Post")
 }

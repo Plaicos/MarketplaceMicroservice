@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+service Marketplace {
+    rpc post (post) returns (statusResponse) {};
+    rpc get_post_types (null) returns (postTypes) {};
+}
+
+message post {
+    string title = 1;
+    string type = 2;
+    string user = 3;
+    int32 product = 4;
+    string description = 5;
+    bool limited = 6;
+    postExpires expires = 7;
+}
+
+message null {}
+
+message postExpires {
+    int32 expires_in = 1;
+}
+
+message statusResponse {
+    string status = 1;
+}
+
+message postTypes {
+    repeated string types = 1;
+}
