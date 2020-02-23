@@ -7,6 +7,8 @@ module.exports = {
     location: require("./post_location"),
     limit: require("./search_limit"),
     offset : require("./search_offset"),
+    product: require("./post_product"),
+    description: require("./post_description"),
     // types
     raw_material: require("./types/raw_material/raw_material_entities")
 }

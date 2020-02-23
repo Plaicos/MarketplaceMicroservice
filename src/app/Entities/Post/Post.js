@@ -21,7 +21,7 @@ module.exports = class Post {
                 //global fields
                 let global = await this.global()
                 //type specific fields
-                let specific = await this[global.type]()
+                let specific = new Object() // await this[global.type]()
                 // merging
                 post = { ...global, ...specific }
                 post = this.methods(post)
@@ -45,6 +45,7 @@ module.exports = class Post {
 
             try {
                 let Post = await DAO.get_post(id)
+                Post = this.methods(Post)
                 resolve(Post)
             }
             catch (erro) {
@@ -56,17 +57,20 @@ module.exports = class Post {
     global() {
         return new Promise(async (resolve, reject) => {
             let { data, SCI, DAO, entities } = this
-            let { title, type, limited, user, expires, warehouse_id } = data
+            let { title, limited, user, expires, warehouse, product, description } = data
             let global = {}
 
             try {
-                global.title = await entities.title({ title })
-                global.type = await entities.type({ type, DAO })
                 global.user = await entities.user({ user, SCI })
-                global.location = await entities.location({ SCI, warehouse_id, user: global.user })
+                this.owner = global.user
+                global.product = await entities.product({ product, SCI, owner: this.owner })
+                global.type = await entities.type({ type: global.product.__proto__.type })
+                global.title = await entities.title({ title })
+                global.location = await entities.location({ SCI, warehouse, user: global.user })
                 global.limited = await entities.limited({ limited })
                 global.expires = await entities.expires({ limited, expires })
-                this.owner = global.user
+                global.description = await entities.description({ description })
+
                 resolve(global)
             }
             catch (erro) {
@@ -85,8 +89,7 @@ module.exports = class Post {
             let specific = new Object()
 
             try {
-                specific.product = await entities.product({ product_id, SCI, owner })
-                specific.description = await entities.description({ description })
+
                 //
                 resolve(specific)
             }
@@ -109,8 +112,30 @@ module.exports = class Post {
         var { SCI } = this
         return function (credential) {
             return new Promise(async (resolve, reject) => {
-                let owner = this.user
+                var config = {
+                    level: 4,
+                    scope: {
+                        read: true,
+                        write: true,
+                        third_party: {
+                            read: false,
+                            write: false
+                        }
+                    }
+                }
 
+                if (!credential || typeof credential !== "object") {
+                    console.log(Error("CREDENTIAL IS MISSING"))
+                    return reject("INTERNAL SERVER ERROR, TRY LATER")
+                }
+
+                try {
+                    await SCI.Authenticator.checkCredentialClearance(config, credential)
+                    resolve()
+                }
+                catch (erro) {
+                    reject(erro)
+                }
             })
         }
     }
@@ -134,6 +159,11 @@ module.exports = class Post {
                     }
                 })
 
+                if (!credential || typeof credential !== "object") {
+                    console.log(Error("CREDENTIAL IS MISSING"))
+                    return reject("INTERNAL SERVER ERROR, TRY LATER")
+                }
+
                 try {
                     await SCI.Authenticator.checkCredentialClearance(config, credential)
                     resolve()
@@ -146,15 +176,24 @@ module.exports = class Post {
     }
 
     delete() {
+        var { DAO } = this
         return function () {
             return new Promise(async (resolve, reject) => {
+                let id = this._id
 
+                try {
+                    await DAO.delete_post(id)
+                    resolve()
+                }
+                catch (erro) {
+                    reject(erro)
+                }
             })
         }
     }
 
     edit() {
-        var { DAO, entities } = this
+        var { DAO, SCI, entities } = this
         return function (changes) {
             return new Promise(async (resolve, reject) => {
 
@@ -167,15 +206,21 @@ module.exports = class Post {
 
                 try {
                     if (changes.title) {
-                        edit.title = await entities.title({ title })
+                        this.title = await entities.title({ title: changes.title })
+                    }
+                    if (Array.isArray(changes.product_id) && changes.product_id.length > 0) {
+                        console.log("fooo", changes)
+                        this.product = await entities.product({ product_id: changes.product_id, SCI, owner: this.user })
+                        this.type = await entities.type({ type: this.product.__proto__.type })
                     }
                     if (changes.description) {
-                        edit.description = await entities[this.type].description({ description })
+                        this.description = await entities[this.type].description({ description: changes.description })
                     }
-                    console.log({ edit })
+                    console.log(this)
+                    resolve()
                 }
                 catch (erro) {
-
+                    reject(erro)
                 }
             })
         }

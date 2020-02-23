@@ -25,7 +25,10 @@ module.exports = ({ product_id, SCI, owner }) => {
 
         try {
             let product = await SCI.Inventory.getProduct(product_id, simuleted_credential)
-            resolve(product)
+            if (product.user !== owner) {
+                return reject("Cant user another user's product in your post")
+            }
+            resolve(product_id)
         }
         catch (erro) {
             reject(erro)

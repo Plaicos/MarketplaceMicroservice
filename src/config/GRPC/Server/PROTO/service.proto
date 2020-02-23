@@ -4,11 +4,24 @@ package MarketplacePackage;
 service Marketplace {
     rpc post (postRequest) returns (statusResponse) {};
     rpc search_posts (postSearch) returns (postSearchResults);
-    rpc get_post_types (null) returns (postTypes) {};
+    rpc edit_post (postEdit) returns (statusResponse);
+    rpc delete_post (postDelete) returns (statusResponse);
+    rpc get_post(postGet) returns (post);
+} 
+
+message postDelete {
+    string id = 1;
+    credential credential = 2;
+}
+
+message postEdit {
+    string id = 1;
+    post changes = 2;
+    credential credential = 3;
 }
 
 message postSearchResults {
-    repeated postGet results = 1;
+    repeated post results = 1;
 }
 
 message postRequest {
@@ -59,22 +72,18 @@ message post {
     string title = 1;
     string type = 2;
     string user = 3;
-    string product_id = 4;
+    repeated string product = 4;
     string description = 5;
     bool limited = 6;
     postExpires expires = 7;
-    string warehouse_id = 8;
+    string warehouse = 8;
+    string _id = 9;
+    location location = 10;
 }
 
 message postGet {
-    string title = 1;
-    string type = 2;
-    string user = 3;
-    product product = 4;
-    string description = 5;
-    bool limited = 6;
-    postExpires expires = 7;
-    location location = 8;
+    string id = 1;
+    credential credential = 2;
 }
 
 message null {}

@@ -27,6 +27,42 @@ module.exports = class Controller {
         }
     }
 
+    edit_post() {
+        var self = this
+        return async function (call, callback) {
+            let { id, changes, credential } = call.request
+
+            try {
+                await self.UseCases.edit_post(id, changes, credential)
+                let statusResponse = {
+                    status: "ok"
+                }
+                callback(null, statusResponse)
+            }
+            catch (erro) {
+                self.handleError(erro, callback)
+            }
+        }
+    }
+
+    delete_post() {
+        var self = this
+        return async function (call, callback) {
+            let { id, credential } = call.request
+
+            try {
+                await self.UseCases.delete_post(id, credential)
+                let statusResponse = {
+                    status: "ok"
+                }
+                callback(null, statusResponse)
+            }
+            catch (erro) {
+                self.handleError(erro, callback)
+            }
+        }
+    }
+
     search_posts() {
         var self = this
         return async function (call, callback) {
@@ -62,4 +98,36 @@ module.exports = class Controller {
         }
     }
 
+    get_post() {
+        var self = this
+        return async function (call, callback) {
+            let { id, credential } = call.request
+
+            try {
+                let post = await self.UseCases.get_post(id, credential)
+                callback(null, post)
+            }
+            catch (erro) {
+                self.handleError(erro, callback)
+            }
+        }
+    }
+
+    check_post() {
+        var self = this
+        return async function (call, callback) {
+            let { id, credential } = call.request
+
+            try {
+                await self.UseCases.check_post(id, credential)
+                let statusResponse = {
+                    status: "ok"
+                }
+                callback(null, statusResponse)
+            }
+            catch (erro) {
+                self.handleError(erro, callback)
+            }
+        }
+    }
 }

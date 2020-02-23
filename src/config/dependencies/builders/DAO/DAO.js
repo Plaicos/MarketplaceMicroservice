@@ -39,6 +39,20 @@ module.exports = class DAO {
         });
     }
 
+    delete_post(id) {
+        return new Promise(async (resolve, reject) => {
+            let { ObjectId } = this
+
+            try {
+                await this.collections.posts.deleteOne({ _id: ObjectId(id) })
+                resolve()
+            }
+            catch (erro) {
+                reject(erro)
+            }
+        });
+    }
+
     searchPosts(filters) {
         return new Promise((resolve, reject) => {
 
@@ -114,5 +128,23 @@ module.exports = class DAO {
                 reject(erro)
             }
         })
+    }
+
+    check_post(id) {
+        return new Promise((resolve, reject) => {
+            let { ObjectId } = this
+            this.collections.posts.find({ _id: ObjectId(id) }).project({ _id: 1 }).toArray((erro, result) => {
+                if (erro) {
+                    reject(erro)
+                    return
+                }
+                if (result.length > 0) {
+                    resolve(true)
+                }
+                else {
+                    resolve(false)
+                }
+            })
+        });
     }
 }
