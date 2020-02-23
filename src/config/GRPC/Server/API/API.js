@@ -14,7 +14,8 @@ module.exports = class API {
         Controller = new Controller(dependencies)
 
         let api = {
-            
+            post: Controller.post(),
+            search_posts: Controller.search_posts()
         }
         return Object.freeze(api)
     }

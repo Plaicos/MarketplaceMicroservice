@@ -1,75 +1,32 @@
-module.exports = (dependencies) => {
+module.exports = ({ product_id, SCI, owner }) => {
     return new Promise(async (resolve, reject) => {
-        let { product, Requester, credentials, DAO } = dependencies
 
-        if (!Requester) {
-            let erro = {
-                message: "INTERNAL SERVER ERROR, TRY LATER",
-                status: 500
-            }
-            reject(erro)
-            console.log(Error("DAO IS NULL"))
-            return
+        if (!SCI) {
+            console.log(Error("SCI IS NULL"))
+            return reject("INTERNAL SERVER ERROR, TRY LATER")
         }
 
-        if (!product) {
-            let erro = {
-                message: "PRODUCT DATA CANT BE NULL",
-                status: 400
-            }
-            reject(erro)
-            return
-        }
-        else if (typeof product !== "object") {
-            let erro = {
-                message: "PRODUCT DATA MUST BE AN OBJECT",
-                status: 400
-            }
-            reject(erro)
-            return
+        if (!product_id || typeof product_id !== "string") {
+            return reject("Post product ID must be a valid ID string")
         }
 
-        let { raw_material } = product
-
-        if (!raw_material) {
-            let erro = {
-                message: "PRODUCT RAW MATERIAL CANT BE NULL",
-                status: 400
+        let simuleted_credential = {
+            user: owner,
+            level: 4,
+            scope: {
+                read: true,
+                write: true,
+                third_party: {
+                    read: false,
+                    write: false
+                }
             }
-            reject(erro)
-            return
-        }
-        else if (typeof raw_material !== "number") {
-            let erro = {
-                message: "PRODUCT RAW MATERIAL MUST BE AN INTEGER NUMBER",
-                status: 400
-            }
-            reject(erro)
-            return
         }
 
         try {
-            let mainServerUrl = Requester.links.main
-            let url = `${mainServerUrl}/sys/get/raw-material`
-            let config = {
-                url: url,
-                params: {
-                    id: raw_material
-                }
-            }
-            raw_material = await Requester.get(config)
-            if (raw_material.user !== credentials.user) {
-                let erro = {
-                    message: "THIS PRODUCT BELONGS TO OTHER USER",
-                    status: 401
-                }
-                reject(erro)
-                return
-            }
-            //s
-            product = raw_material
+            let product = await SCI.Inventory.getProduct(product_id, simuleted_credential)
             resolve(product)
-        } 
+        }
         catch (erro) {
             reject(erro)
         }

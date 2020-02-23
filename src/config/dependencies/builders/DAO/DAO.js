@@ -11,7 +11,7 @@ module.exports = class DAO {
     get_post(id) {
         return new Promise((resolve, reject) => {
             let { ObjectId } = this
-            this.collections.post.find({ _id: ObjectId(id) }).toArray((erro, result) => {
+            this.collections.posts.find({ _id: ObjectId(id) }).toArray((erro, result) => {
                 if (erro) {
                     reject(erro)
                     return
@@ -20,16 +20,16 @@ module.exports = class DAO {
                     resolve(result[0])
                 }
                 else {
-                    resolve(null)
+                    reject("That ID does not refer not any post")
                 }
             })
         });
     }
 
-    createPost(post) {
+    registerPost(post) {
         return new Promise(async (resolve, reject) => {
             try {
-                let insertionLog = await this.collections.post.insertOne(post)
+                let insertionLog = await this.collections.posts.insertOne(post)
                 //console.log({ insertionLog })
                 resolve(insertionLog)
             }
@@ -39,7 +39,7 @@ module.exports = class DAO {
         });
     }
 
-    search(filters) {
+    searchPosts(filters) {
         return new Promise((resolve, reject) => {
 
             function denest(filter, filters) {
@@ -51,26 +51,24 @@ module.exports = class DAO {
             }
 
             //parsing data
-            let pagination = filters.pagination
-            delete filters.pagination
-
-            //denesting nested fields
-            if (filters.product) {
-                let fields = Object.keys(filters.product)
-                for (let i of fields) {
-                    filters[`product.${i}`] = filters.product[i]
-                }
-                delete filters.product
+            let pagination = {
+                limit: filters.limit,
+                offset: filters.offset
             }
+            delete filters.limit
+            delete filters.offset
+
             if (filters.location) {
-                let fields = Object.keys(filters.location)
-                for (let i of fields) {
-                    filters[`location.${i}`] = filters.location[i]
-                }
-                delete filters.location
+                filters.location = { $elemMatch: filters.location }
+            }
+            if (filters.product) {
+                filters.product = { $elemMatch: filters.product }
+            }
+            if (filters.title) {
+                filters.title = new RegExp(".*" + filters.title + ".*")
             }
 
-            this.collections.post.find(filters).limit(pagination.limit).skip(pagination.offset).toArray((erro, result) => {
+            this.collections.posts.find(filters).limit(pagination.limit).skip(pagination.offset).toArray((erro, result) => {
                 if (erro) {
                     return reject(erro)
                 }

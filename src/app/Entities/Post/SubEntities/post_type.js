@@ -11,7 +11,7 @@ module.exports = ({ type, DAO }) => {
         }
 
         try {
-            if (!await DAO.checkPostType) {
+            if (!await DAO.checkPostType(type)) {
                 return reject(`Post type '${type}' does not exist`)
             }
             resolve(type)

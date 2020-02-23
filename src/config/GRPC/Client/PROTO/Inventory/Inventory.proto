@@ -3,7 +3,15 @@ package InventoryPackage;
 
 service Inventory {
     rpc get_user_products (productSearch) returns (productSearchresult);
+    rpc get_product(productGet) returns (product);
     rpc search_inciName (inciSearch) returns (inciSearchResult);
+    rpc check_location (location) returns (statusResponse);
+}
+
+message location {
+    string country = 1;
+    string state = 2;
+    string city = 3;
 }
 
 message inci {

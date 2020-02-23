@@ -1,18 +1,80 @@
 syntax = "proto3";
+package MarketplacePackage;
 
 service Marketplace {
-    rpc post (post) returns (statusResponse) {};
+    rpc post (postRequest) returns (statusResponse) {};
+    rpc search_posts (postSearch) returns (postSearchResults);
     rpc get_post_types (null) returns (postTypes) {};
+}
+
+message postSearchResults {
+    repeated postGet results = 1;
+}
+
+message postRequest {
+    post post = 1;
+    credential credential = 2;
+}
+
+message product {
+    string _id = 1;
+    string title = 2;
+    string type = 3;
+    string user = 4;
+    string made_in = 5;
+    int32 shelf_life = 6;
+    int32 lead_time = 7;
+    string manufacturer = 8;
+    string origin = 9;
+    repeated string inci_name = 10;
+    repeated string application = 11;
+    repeated string functions = 12;
+
+}
+
+message filters {
+    string title = 1;
+    string type = 2;
+    string user = 3;
+    product product = 4;
+    location location = 5;
+    bool limited = 6;
+    postExpires expires = 7;
+    int32 limit = 8;
+    int32 offset = 9;
+}
+
+message location {
+    string country = 1;
+    string state = 2;
+    string city = 3;
+}
+
+message postSearch {
+    filters filters = 1;
+    credential credential = 2;
 }
 
 message post {
     string title = 1;
     string type = 2;
     string user = 3;
-    int32 product = 4;
+    string product_id = 4;
     string description = 5;
     bool limited = 6;
     postExpires expires = 7;
+    string warehouse_id = 8;
+}
+
+message postGet {
+    string title = 1;
+    string type = 2;
+    string user = 3;
+    product product = 4;
+    string description = 5;
+    bool limited = 6;
+    postExpires expires = 7;
+    location location = 8;
 }
 
 message null {}
@@ -27,4 +89,21 @@ message statusResponse {
 
 message postTypes {
     repeated string types = 1;
+}
+
+message scope {
+    bool read = 1;
+    bool write = 2;
+    third_party_scope third_party = 3;
+}
+
+message third_party_scope {
+    bool read = 1;
+    bool write = 2;
+}
+
+message credential {
+    string user = 1;
+    int32 level = 2;
+    scope scope = 3;
 }

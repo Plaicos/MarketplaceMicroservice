@@ -1,7 +1,5 @@
-module.exports = (dependencies) => {
+module.exports = (limited) => {
     return new Promise((resolve, reject) => {
-        let { limited } = dependencies
-
         try {
             if (limited !== true) {
                 limited = false

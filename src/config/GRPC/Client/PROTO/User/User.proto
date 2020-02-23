@@ -4,6 +4,23 @@ package UserPackage;
 service User {
     rpc get_user (userGet) returns (user_data);
     rpc check_user (userGet) returns (statusResponse);
+    rpc get_user_warehouses (warehouseGet) returns (warehouses);
+    rpc get_user_warehouse (warehouseGet) returns (warehouse);
+}
+
+message warehouseGet {
+    string id= 1;
+    string user = 2;
+    credential credential = 3;
+}
+
+message warehouse {
+    string _id = 1;
+    location location = 2;
+}
+
+message warehouses {
+    repeated warehouse warehouses = 1;
 }
 
 message login_data {
