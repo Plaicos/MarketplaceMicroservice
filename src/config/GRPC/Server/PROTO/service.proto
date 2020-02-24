@@ -47,7 +47,7 @@ message product {
 
 message filters {
     string title = 1;
-    string type = 2;
+    repeated string type = 2;
     string user = 3;
     product product = 4;
     location location = 5;
@@ -70,7 +70,7 @@ message postSearch {
 
 message post {
     string title = 1;
-    string type = 2;
+    repeated string type = 2;
     string user = 3;
     repeated string product = 4;
     string description = 5;

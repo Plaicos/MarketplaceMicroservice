@@ -241,7 +241,7 @@ module.exports = class Post {
                 if (filters.title) {
                     filter.title = await entities.title({ title })
                 }
-                if (filters.type) {
+                if (Array.isArray(filters.type) && filters.type.length > 0) {
                     filter.type = await entities.type({ type, DAO })
                 }
                 if (filters.user) {
@@ -257,7 +257,7 @@ module.exports = class Post {
 
                 }
                 if (filters.product) {
-                    filter.product = filters.product
+                    //filter.product = await entities.product({product, SCI, owner:})
                 }
                 filter.limit = await entities.limit(limit)
                 filter.offset = await entities.offset(offset)

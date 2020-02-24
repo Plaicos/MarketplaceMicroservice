@@ -1,6 +1,6 @@
 module.exports = (limit) => {
     return new Promise((resolve, reject) => {
-        console.log({ limit })
+      
         if (!limit) {
             resolve(30)
         }

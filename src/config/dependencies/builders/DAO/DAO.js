@@ -56,14 +56,6 @@ module.exports = class DAO {
     searchPosts(filters) {
         return new Promise((resolve, reject) => {
 
-            function denest(filter, filters) {
-                let filter_keys = Object.keys(filter)
-                for (let i of filter_keys) {
-                    filters[i] = filter[i]
-                }
-                return filters;
-            }
-
             //parsing data
             let pagination = {
                 limit: filters.limit,
@@ -75,13 +67,10 @@ module.exports = class DAO {
             if (filters.location) {
                 filters.location = { $elemMatch: filters.location }
             }
-            if (filters.product) {
-                filters.product = { $elemMatch: filters.product }
-            }
             if (filters.title) {
                 filters.title = new RegExp(".*" + filters.title + ".*")
             }
-
+            
             this.collections.posts.find(filters).limit(pagination.limit).skip(pagination.offset).toArray((erro, result) => {
                 if (erro) {
                     return reject(erro)
