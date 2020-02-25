@@ -80,23 +80,6 @@ module.exports = class Controller {
         }
     }
 
-    get_post_types() {
-        var self = this
-        return async function (call, callback) {
-            let { UseCases } = self
-
-            try {
-                let postTypes = {
-                    types: await UseCases.get_post_types()
-                }
-                callback(null, postTypes)
-            }
-            catch (erro) {
-                console.log(erro)
-            }
-        }
-    }
-
     get_post() {
         var self = this
         return async function (call, callback) {

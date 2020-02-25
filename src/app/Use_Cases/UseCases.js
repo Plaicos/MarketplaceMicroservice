@@ -8,20 +8,6 @@ module.exports = class UseCases {
         this.entities = require("../Entities/entities")
     }
 
-    get_post_types() {
-        return new Promise(async (resolve, reject) => {
-            let { DAO } = this
-
-            try {
-                let types = await DAO.get_post_types()
-                resolve(types)
-            }
-            catch (erro) {
-                reject(erro)
-            }
-        });
-    }
-
     post_to_marketplace(post_data, credential) {
         return new Promise(async (resolve, reject) => {
 
