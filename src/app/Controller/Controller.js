@@ -72,7 +72,6 @@ module.exports = class Controller {
                 let results = {
                     results: await self.UseCases.search_marketplace(filters, credential)
                 }
-                console.log(results.results)
                 callback(null, results)
             }
             catch (erro) {

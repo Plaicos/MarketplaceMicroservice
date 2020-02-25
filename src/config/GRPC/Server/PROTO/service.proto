@@ -55,6 +55,11 @@ message filters {
     postExpires expires = 7;
     int32 limit = 8;
     int32 offset = 9;
+    key_words key_words = 10;
+}
+
+message key_words {
+    repeated string inci_name = 1;
 }
 
 message location {

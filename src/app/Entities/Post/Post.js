@@ -70,6 +70,7 @@ module.exports = class Post {
                 global.limited = await entities.limited({ limited })
                 global.expires = await entities.expires({ limited, expires })
                 global.description = await entities.description({ description })
+                global.key_words = global.product.__proto__.key_words
 
                 resolve(global)
             }
@@ -212,6 +213,7 @@ module.exports = class Post {
                         console.log("fooo", changes)
                         this.product = await entities.product({ product_id: changes.product_id, SCI, owner: this.user })
                         this.type = await entities.type({ type: this.product.__proto__.type })
+                        this.key_words = this.product.__proto__.key_words
                     }
                     if (changes.description) {
                         this.description = await entities[this.type].description({ description: changes.description })
@@ -256,8 +258,8 @@ module.exports = class Post {
                 if (filters.expires) {
 
                 }
-                if (filters.product) {
-                    //filter.product = await entities.product({product, SCI, owner:})
+                if (filters.key_words) {
+                    filter.key_words = await entities.key_words(filters.key_words)
                 }
                 filter.limit = await entities.limit(limit)
                 filter.offset = await entities.offset(offset)

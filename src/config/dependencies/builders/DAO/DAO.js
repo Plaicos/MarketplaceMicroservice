@@ -67,10 +67,22 @@ module.exports = class DAO {
             if (filters.location) {
                 filters.location = { $elemMatch: filters.location }
             }
+
+            if (filters.key_words) {
+                let key_words = filters.key_words
+                let keys = Object.keys(key_words)
+                delete filters.key_words
+        
+                for (let key of keys) {
+                    filters[`key_words.${key}`] = { $in: key_words[key] }
+                }
+                
+            }
+
             if (filters.title) {
                 filters.title = new RegExp(".*" + filters.title + ".*")
             }
-            
+            console.log(filters)
             this.collections.posts.find(filters).limit(pagination.limit).skip(pagination.offset).toArray((erro, result) => {
                 if (erro) {
                     return reject(erro)

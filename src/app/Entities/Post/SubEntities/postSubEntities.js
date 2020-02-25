@@ -9,6 +9,7 @@ module.exports = {
     offset : require("./search_offset"),
     product: require("./post_product"),
     description: require("./post_description"),
+    key_words: require("./search_key_words"),
     // types
     raw_material: require("./types/raw_material/raw_material_entities")
 }
