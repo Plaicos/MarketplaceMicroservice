@@ -82,7 +82,7 @@ module.exports = class DAO {
             if (filters.title) {
                 filters.title = new RegExp(".*" + filters.title + ".*")
             }
-            console.log(filters)
+            
             this.collections.posts.find(filters).limit(pagination.limit).skip(pagination.offset).toArray((erro, result) => {
                 if (erro) {
                     return reject(erro)
