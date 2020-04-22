@@ -274,4 +274,10 @@ module.exports = class Post {
         })
 
     }
+
+    assign_quotation(){
+        return function(){
+            
+        }
+    }
 }

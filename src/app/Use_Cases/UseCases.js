@@ -137,7 +137,18 @@ module.exports = class UseCases {
             }
             catch (erro) {
                 reject(erro)
-            }   
+            }
         })
+    }
+
+    async assign_quotation() {
+        let { entities, SCI, DAO } = this
+
+        try{
+
+        }
+        catch(erro){
+            
+        }
     }
 }
